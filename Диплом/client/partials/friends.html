@@ -1,0 +1,29 @@
+
+
+<div class="friends-wrapper">
+  <h3 class="section-title">Поиск друзей</h3>
+  <input type="text" id="friend-search" placeholder="Найти пользователя..." oninput="unifiedSearch()" />
+
+  <h4>Мои друзья</h4>
+  <div id="friends-message" class="friends-message">Загрузка...</div>
+  <div id="friends-list" class="friends-list"></div>
+
+  <h4 class="section-title">Добавить нового друга</h4>
+  <input type="text" id="user-search" placeholder="Поиск пользователей..." oninput="searchUsers()">
+  <div id="users-list" class="users-list"></div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const list = document.getElementById("friends-list");
+  if (!list) return;
+
+  list.addEventListener("click", (e) => {
+    const card = e.target.closest(".friend-card");
+    const id = card?.dataset.id;
+    if (id) {
+      window.location.href = `/friend.html?id=${id}`;
+    }
+  });
+});
+</script>

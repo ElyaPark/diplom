@@ -1,0 +1,280 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>MINJI</title>
+  <link rel="stylesheet" href="style1.css">
+</head>
+<body>
+<div class="container">
+<div class="header">
+            <div class="flag">
+                <img src="/img/KR.png">
+            </div>
+            <div class="fire">
+                <span><img src="/img/Fire.png"></span>
+            </div>
+            <div class="level" id="profile-level">13</div>
+            <div class="name" id="profile-name">MINJI</div>
+            <div class="profile-containeer">
+                <button class="profile-button" id="profileButton">
+                    <span><a href="profile.html" class="profileButton"><img src="/img/profile.png"></a></span>
+                </button>
+            </div>
+            <div class="menu-container">
+                <button class="menu-button" id="menuButton">
+                    <span><img src="/img/more-square.png"></span>
+                </button>
+                <div class="dropdown-menu" id="dropdownMenu">
+                    <ul>
+                        <li><a href="index.html" class="menu-item"><img src="/img/home-3.png"></a></li>
+                        <li><a href="book.html" class="menu-item"><img src="/img/book.png"></a></li>
+                        <li><a href="message.html"><img src="/img/message.png"></a></li>
+                        
+                        <li><a href="setting.html"><img src="/img/setting.png"></a></li>
+                    </ul>
+                </div>
+            </div>
+          </div>
+  <div class="profile-content">
+    <div class="profile-sidebar">
+      <img id="profile-avatar"  class="profile-avatar">
+      <div class="profile-name" id="profile-name-sidebar">Имя</div>
+      <span class="profile-level-full">Уровень <span id="sidebar-level">0</span></span>
+      <div class="progress-container"><div class="progress-bar"></div></div>
+      <div class="streak-info"><img src="/img/Fire.png" class="fire-icon" /><span id="streak-days">0 дней подряд</span></div>
+    </div>
+
+    <div class="profile-main">
+      <div class="profile-tabs">
+        <div class="profile-tab active" data-tab="about">Обо мне</div>
+        <div class="profile-tab" data-tab="achievements">Достижения</div>
+        <div class="profile-tab" data-tab="friends">Друзья</div>
+    
+      </div>
+      <div id="tab-content" class="profile-panel active"></div>
+    </div>
+  </div>
+
+
+<script>
+async function loadProfile() {
+  try {
+    const res = await fetch("/api/user/profile", { credentials: "include" });
+    if (!res.ok) return window.location.href = "/login.html";
+    const user = await res.json();
+
+    document.getElementById("profile-avatar").src = user.avatar || "/img/default-avatar.png";
+    document.getElementById("profile-name-sidebar").childNodes[0].textContent = user.username + " ";
+    document.getElementById("profile-level").textContent = user.level;
+    document.getElementById("sidebar-level").textContent = user.level;
+    document.getElementById("streak-days").textContent = user.streak + " дней подряд";
+
+    if (document.querySelector('.profile-tab[data-tab="about"]').classList.contains("active")) {
+      const wordsEl = document.getElementById("stat-words");
+const accEl = document.getElementById("stat-accuracy");
+const hrsEl = document.getElementById("stat-hours");
+const friendsEl = document.getElementById("stat-friends");
+
+if (wordsEl) wordsEl.textContent = user.stats.words;
+if (accEl) accEl.textContent = user.stats.accuracy + "%";
+if (hrsEl) hrsEl.textContent = user.stats.practiceHours + "ч";
+if (friendsEl) friendsEl.textContent = user.stats.friendsCount;
+
+    }
+  } catch (err) {
+    console.error("Ошибка профиля", err);
+  }
+}
+
+function renderFriends(friends) {
+  const list = document.getElementById("friends-list");
+  const msg = document.getElementById("friends-message");
+  if (!list || !msg) return;
+
+  list.innerHTML = "";
+
+  if (!friends.length) {
+    msg.innerText = "Сейчас у тебя нет друзей.";
+    return;
+  }
+
+  msg.innerText = "";
+  friends.forEach(friend => {
+    const el = document.createElement("div");
+    el.className = "friend-card";
+    el.dataset.id = friend.id;
+    el.innerHTML = `
+      <img class="friend-avatar" src="${friend.avatar || '/img/default-avatar.png'}" alt="аватар">
+      <div class="friend-info">
+        <div class="friend-name">${friend.username}</div>
+        <div class="friend-level">Уровень ${friend.level || 1}</div>
+      </div>
+      <div class="friend-actions">
+    <button class="message-btn" onclick="event.stopPropagation(); window.location.href='/message.html?id=${friend.id}'">✉</button>
+    <button class="remove-btn" onclick="removeFriend(${friend.id}); event.stopPropagation()">✕</button>
+  </div>
+    `;
+    el.addEventListener("click", () => {
+      window.location.href = `/friend.html?id=${friend.id}`;
+    });
+    list.appendChild(el);
+  });
+}
+
+function renderUsers(users) {
+  const container = document.getElementById("users-list");
+  container.innerHTML = "";
+  users.forEach(user => {
+    const isFriend = window._allFriends.find(f => f.id === user.id);
+    if (user.id === window._myId) return;
+
+    const div = document.createElement("div");
+    div.className = "user-card";
+    div.innerHTML = `
+      <img class="user-avatar" src="${user.avatar || '/img/default-avatar.png'}" alt="аватар">
+      <div class="user-info">
+        <div class="user-name">${user.username}</div>
+        <div class="user-level">Уровень ${user.level || 1}</div>
+      </div>
+      <div class="user-actions">
+        ${
+          isFriend
+            ? `<button class="message-btn" onclick="event.stopPropagation(); window.location.href='/message.html?id=${user.id}'">✉</button>
+               <button class="remove-btn" onclick="removeFriend(${user.id}); event.stopPropagation()">✕</button>`
+            : `<button class="add-btn" onclick="addFriend(${user.id}); event.stopPropagation()">+</button>`
+        }
+      </div>
+    `;
+    container.appendChild(div);
+  });
+}
+
+async function loadFriends() {
+  try {
+    const res = await fetch("/api/user/friends", { credentials: "include" });
+    const friends = await res.json();
+    window._allFriends = friends;
+    renderFriends(friends);
+  } catch (err) {
+    console.error("Ошибка загрузки друзей:", err);
+  }
+}
+
+async function loadAllUsers() {
+  try {
+    const res = await fetch("/api/user/all", { credentials: "include" });
+    const users = await res.json();
+    window._allUsers = users;
+  } catch (err) {
+    console.error("Ошибка загрузки пользователей:", err);
+  }
+}
+
+function unifiedSearch() {
+  const query = document.getElementById("friend-search").value.toLowerCase();
+
+  const filteredFriends = (window._allFriends || []).filter(f =>
+    f.username.toLowerCase().includes(query)
+  );
+
+  const filteredUsers = (window._allUsers || []).filter(u =>
+    u.username.toLowerCase().includes(query) &&
+    !window._allFriends.find(f => f.id === u.id) &&
+    u.id !== window._myId
+  );
+
+  renderFriends(filteredFriends);
+  renderUsers(filteredUsers);
+}
+
+async function addFriend(friendId) {
+  const res = await fetch("/api/user/friends/add", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    credentials: "include",
+    body: JSON.stringify({ friendId })
+  });
+
+  if (res.ok) {
+    await loadFriends();
+    await loadAllUsers();
+    unifiedSearch();
+  } else {
+    alert("Не удалось добавить друга");
+  }
+}
+
+async function removeFriend(friendId) {
+  const res = await fetch("/api/user/friends/remove", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    credentials: "include",
+    body: JSON.stringify({ friendId })
+  });
+
+  if (res.ok) {
+    window._allFriends = window._allFriends.filter(f => f.id !== friendId);
+    renderFriends(window._allFriends);
+  } else {
+    alert("Не удалось удалить друга");
+  }
+}
+
+document.querySelectorAll(".profile-tab").forEach(btn => {
+  btn.addEventListener("click", async () => {
+    document.querySelectorAll(".profile-tab").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+
+    const tab = btn.dataset.tab;
+    const res = await fetch("/partials/" + tab + ".html");
+    const html = await res.text();
+    document.getElementById("tab-content").innerHTML = html;
+
+    if (tab === "about") await loadProfile();
+    if (tab === "friends") { await loadFriends(); await loadAllUsers(); unifiedSearch(); }
+  });
+});
+
+window.addEventListener("DOMContentLoaded", async () => {
+  const res = await fetch("/api/auth/check", {
+    credentials: "include"
+  });
+  if (!res.ok) {
+    window.location.href = "/login.html";
+  } else {
+    const data = await res.json();
+    window._myId = data.id;
+    loadProfile();
+  }
+});
+
+const menuButton = document.getElementById('menuButton');
+const dropdownMenu = document.getElementById('dropdownMenu');
+
+if (menuButton && dropdownMenu) {
+    menuButton.addEventListener('click', () => {
+        dropdownMenu.style.display = dropdownMenu.style.display === 'block' ? 'none' : 'block';
+    });
+} else {
+    console.error("Кнопка меню или выпадающее меню не найдены!");
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  fetch('/api/user')
+    .then(res => res.json())
+    .then(data => {
+      const avatar = document.getElementById('profile-avatar');
+      if (avatar && data.avatar) {
+        avatar.src = data.avatar;
+      }
+    })
+    .catch(err => {
+      console.error("Ошибка загрузки профиля:", err);
+    });
+});
+
+</script>
+</body>
+</html>

@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MINJI</title>
+    <link rel="stylesheet" href="style1.css">
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="flag">
+                <img src="./img/KR.png">
+            </div>
+            <div class="fire">
+                <span>
+                    <img src="./img/Fire.png"></span>
+            </div>
+            <div class="level">13</div>
+            <div class="name">MINJI</div>
+            <div class="profile-containeer">
+                <button class="profile-button" id="profileButton">
+                    <span><a href="profile.html" class="profileButton"><img src="./img/profile.png"></span> <!-- Здесь будет иконка меню -->
+                </button>
+            </a>
+            </div>
+                <div class="menu-container">
+                    <button class="menu-button" id="menuButton">
+                        <span><img src="./img/more-square.png"></span> <!-- Здесь будет иконка меню -->
+                    </button>
+                    <div class="dropdown-menu" id="dropdownMenu">
+                        <ul>
+                            <li><a href="index.html" class="menu-item"><img src="./img/home-3.png"></a></li>
+                            <li><a href="book.html" class="menu-item"><img src="./img/book1.png"></a></li>
+                            <li><a href="message.html"><img src="./img/message.png"></a></li>
+                            <!-- <li><a href="crown.html"><img src="./img/crown.png"></a></li> -->
+                            <li><a href="setting.html"><img src="./img/setting.png"></a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+       
+        
+          
+        <div class="content-container" id="contentContainer">
+            <div class="content-section" id="slova">
+                <div class="slova-list">
+                    <button class="slova-card">
+                        <span><p>Базовые фразы</p></span>
+                    </button>
+                    <button class="slova-card">
+                        <span><p>Числительные</p></span>
+                    </button>
+                    <button class="slova-card">
+                        <span><p>Семья</p></span>
+                    </button>
+                    <button class="slova-card">
+                        <span><p>Цвета</p></span>
+                    </button>
+                    <button class="slova-card">
+                        <span><p>Эмоции</p></span>
+                    </button>
+                    <button class="slova-card">
+                        <span><p>Времена года и погода</p></span>
+                    </button>
+                    <button class="slova-card">
+                        <span><p>Дорамы</p></span>
+                    </button>
+                    <button class="slova-card">
+                        <span><p>Музыка</p></span>
+                    </button>
+                    <button class="slova-card">
+                        <span><p>Одежда и аксессууары</p></span>
+                    </button>
+                    <button class="slova-card">
+                        <span><p>Еда и напитки</p></span>
+                    </button>
+                    <button class="slova-card">
+                        <span><p>Части тела</p></span>
+                    </button>
+                    <button class="slova-card">
+                        <span><p>Транспорт</p></span>
+                    </button>
+                    <button class="slova-card">
+                        <span><p>Фрукты и овощи</p></span>
+                    </button>
+                    <button class="slova-card">
+                        <span><p>Красота и здоровье</p></span>
+                    </button>
+                    <button class="slova-card">
+                        <span><p>Места в городе</p></span>
+                    </button>
+                    <button class="slova-card">
+                        <span><p>Спорт и игры</p></span>
+                    </button>
+                    <button class="slova-card">
+                        <span><p>Книги и герои</p></span>
+                    </button>
+                    <button class="slova-card">
+                        <span><p>Время и календарь</p></span>
+                    </button>
+                    <button class="slova-card">
+                        <span><p>Профессии</p></span>
+                    </button>
+                    <button class="slova-card">
+                        <span><p>Хобби и интересы</p></span>
+                    </button>
+                    <button class="slova-card">
+                        <span><p>Чувства и состояния</p></span>
+                    </button>
+                    <button class="slova-card">
+                        <span><p>Интерьер</p></span>
+                    </button>
+                    <button class="slova-card">
+                        <span><p>Учёба</p></span>
+                    </button>
+                    <button class="slova-card">
+                        <span><p>Канцтовары</p></span>
+                    </button>
+                    <button class="slova-card">
+                        <span><p>Животные</p></span>
+                    </button>
+                    <button class="slova-card">
+                        <span><p>Корейская культура</p></span>
+                    </button>
+                    <button class="slova-card">
+                        <span><p>Техника</p></span>
+                    </button>
+                    <button class="slova-card">
+                        <span><p>Цветы и растения</p></span>
+                    </button>
+                </div>
+            </div>        
+            <div class="content-section" id="crosswords">
+                <div class="crosswords-list">
+                    
+                  </div>
+            </div>        
+           
+            <div class="content-section" id="dramas">
+                <div class="dramas-list">
+                   
+                  </div>
+             </div>   
+            <div class="content-section" id="text">
+                  
+                    <div class="books-list">
+                        
+                    </div>
+            </div>        
+            <div id="bookTextContainer" class="book-text-container" style="display: none;">
+                
+                <button id="backToMenuButton" class="to-menu">
+                    <img src="./img/Left 3.png" alt="To Menu">
+                </button>
+            
+               
+                <div id="bookHeaderContainer" class="book-header-container">
+                    <img id="bookImage" src="" alt="Book Image" class="book-image">
+                    <h2 id="bookTitle"></h2>
+                </div>
+            
+                <div class="FullButton">
+                    <div class="bookContent">
+                        <button id="fullscreenButton" class="fullscreen-button">
+                            <img src="./img/Group 17.png" alt="Fullscreen">
+                        </button>
+            
+                        <div class="book-content" id="bookContent">
+                            <div id="bookmarkContainer"></div>
+                        </div>
+            
+                        
+            
+                        <div class="page-navigation">
+                            <button id="prevPage" class="nav-arrow prev-page" aria-label="Предыдущая страница"></button>
+                            <span id="pageNumber" style="padding: 0 10px; font-weight: bold;"></span>
+                            <button id="nextPage" class="nav-arrow next-page" aria-label="Следующая страница"></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+                               
+                    
+                    <div id="dramaDetails" class="drama-details" >
+                        <button id="backToList" onclick="backToList()"><img src="./img/Left 4.png"></button>
+                        <div id="dramaTitle"></div>
+                        
+                        <div id="dramaImage">
+                            <img src="" id="dramaImageSrc" alt="Drama Image">
+                        </div>
+                        <div id="dramaDescription"></div>
+                        <div id="dramaEpisodes">
+                          
+                        </div>
+                        <div id="videoPlayer" style="display: none;">
+                            <video id="episodeVideo" controls width="100%">
+                                <source id="videoSource" src="" type="video/mp4">
+                                Ваш браузер не поддерживает элемент video.
+                            </video>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="crossword-main hidden" >
+                    <button id="backToTopicsBtn" class="hidden"><img src="./img/Left 4.png"></button>
+                    
+                    <div class="crossword-sidebar" id="crosswordSidebar">
+                      <h2 id="selectedTopicTitle">Тема</h2>
+                      <div class="crossword-buttons" id="crosswordButtons"></div>
+                    </div>
+                  
+                
+                    <div class="crossword-panel" id="crosswordPanel">
+                        <div class="crossword-hints">
+                            <h3>Подсказки:</h3>
+                            <ul id="allClues"></ul>
+                          </div>
+                      
+                      <div class="crossword-grid" id="crosswordGrid"></div>
+                    </div>
+                  </div>
+                  <div class="task-panel" id="taskPanel" style="display: none;">
+                    <button class="back-button" id="backButton"><img src="./img/Left 4.png"></button>
+                    <div class="theme-sidebar">
+                        
+                        <div class="task-buttons"></div>
+                    </div>
+                    <div class="task-content" id="taskContent">
+                        
+                    </div>
+                </div>
+
+                
+<div class="task-section" id="taskSection" style="display: none;">
+    <button class="back-button" id="backToGroups">← Назад к группам</button>
+    <h2 id="selectedGroupName"></h2>
+    
+    <div class="task-meta">
+        <span id="xpDisplay">XP: 0</span>
+        <label for="difficulty">Сложность: </label>
+        <select id="difficulty">
+            <option value="easy">Легко</option>
+            <option value="medium">Средне</option>
+            <option value="hard">Сложно</option>
+        </select>
+    </div>
+    <div class="task-buttons" id="taskButtons"></div>
+    <div id="taskContent"></div>
+</div>
+
+            
+      
+        <div class="filter-panel">
+            <button class="filter-btn" data-content="text">Тексты</button>
+            <button class="filter-btn" data-content="crosswords">Кроссворды</button>
+            <button class="filter-btn" data-content="dramas">Дорамы</button>
+            <button class="filter-btn" data-content="slova">Слова</button>
+            
+        </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    
+    
+</body>
+</html>

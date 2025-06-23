@@ -1,0 +1,143 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Профиль друга</title>
+  <link rel="stylesheet" href="style1.css">
+  <style>
+    .friend-page {
+      max-width: 600px;
+      margin: 60px auto;
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      padding: 30px 40px;
+      text-align: center;
+    }
+
+    .friend-avatar-large {
+      width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 5px solid white;
+    box-shadow: 0 10px 30px rgba(219, 58, 120);
+    margin-bottom: 20px;
+    animation: float 4s ease-in-out infinite;
+    }
+
+    .friend-username {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .friend-meta {
+      font-size: 16px;
+      color: #777;
+      margin-bottom: 20px;
+    }
+
+    .button-group {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    .back-button, .message-button {
+      display: inline-block;
+      padding: 10px 18px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 500;
+      color: #fff;
+      transition: background-color 0.2s ease;
+    }
+
+    .back-button {
+      background-color: #ff758c;
+    }
+
+    .back-button:hover {
+      background-color: #ff5771;
+    }
+
+    .message-button {
+      background-color: #74b9ff;
+    }
+
+    .message-button:hover {
+      background-color: #3498db;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+        
+        <div class="flag">
+            <img src="/img/KR.png">
+        </div>
+        <div class="fire">
+            <span>
+                <img src="/img/Fire.png"></span>
+        </div>
+        <div class="level" id="profile-level">13</div>
+        <div class="name">MINJI</div>
+        <div class="profile-containeer">
+            <button class="profile-button" id="profileButton">
+                <span><a href="profile.html" class="profileButton"><img src="/img/profile.png"></span> 
+            </button>
+        </a>
+        </div>
+            <div class="menu-container">
+                <button class="menu-button" id="menuButton">
+                    <span><img src="/img/more-square.png"></span> 
+                </button>
+                <div class="dropdown-menu" id="dropdownMenu">
+                    <ul>
+                        <li><a href="index.html" class="menu-item"><img src="/img/home-2.png"></a></li>
+                        <li><a href="book.html" class="menu-item"><img src="/img/book.png"></a></li>
+                        <li><a href="message.html"><img src="/img/message.png"></a></li>
+                        
+                        <li><a href="setting.html"><img src="/img/setting.png"></a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+  <div class="friend-page">
+    <img id="friend-avatar" class="friend-avatar-large" src="/img/default-avatar.png" alt="Аватар друга">
+    <div id="friend-name" class="friend-username">Имя друга</div>
+    <div id="friend-level" class="friend-meta">Уровень: —</div>
+    <div class="button-group">
+      <a href="profile.html" class="back-button">← Назад</a>
+      <a href="/message.html" id="message-link" class="message-button">✉ Написать</a>
+    </div>
+  </div>
+  <script src="script.js"></script>
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const friendId = params.get("id");
+
+    if (friendId) {
+      document.getElementById("message-link").href = "/message.html?id=" + friendId;
+
+      fetch(`/api/user/${friendId}`, { credentials: "include" })
+        .then(res => res.json())
+        .then(data => {
+          document.getElementById("friend-name").textContent = data.username || "Друг";
+          document.getElementById("friend-level").textContent = "Уровень: " + (data.level || "—");
+          if (data.avatar) {
+            document.getElementById("friend-avatar").src = data.avatar;
+          }
+        })
+        .catch(err => {
+          document.getElementById("friend-name").textContent = "Ошибка загрузки";
+        });
+    }
+  </script>
+
+</body>
+</html>

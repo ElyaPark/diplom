@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MINJI - Настройки</title>
+    <link rel="stylesheet" href="style1.css">
+    <style>
+        .settings-container {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 15px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.settings-title {
+    text-align: center;
+    color: #333;
+    margin-bottom: 30px;
+    font-size: 28px;
+}
+
+.settings-section {
+    margin-bottom: 30px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 20px;
+}
+
+.settings-section h2 {
+    display: flex;
+    align-items: center;
+    color: #444;
+    font-size: 20px;
+    margin-bottom: 20px;
+}
+
+.section-icon {
+    width: 24px;
+    height: 24px;
+    margin-right: 10px;
+}
+
+.setting-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+}
+
+.setting-item span {
+    font-weight: 500;
+    color: #555;
+}
+
+.setting-value {
+    display: flex;
+    align-items: center;
+    color: #777;
+}
+
+.edit-btn, .view-btn {
+    background-color: #f0f0f0;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 8px;
+    margin-left: 10px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.2s;
+}
+
+.edit-btn:hover, .view-btn:hover {
+    background-color: #e0e0e0;
+}
+
+.avatar-preview {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.level-select, .font-select, .lang-select, .time-input {
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    background-color: #fff;
+}
+
+.goal-slider {
+    width: 200px;
+    margin-right: 15px;
+}
+
+.goal-value {
+    min-width: 80px;
+    text-align: right;
+}
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 24px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 24px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 16px;
+    width: 16px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+input:checked + .slider {
+    background-color: #4CAF50;
+}
+
+input:checked + .slider:before {
+    transform: translateX(26px);
+}
+
+.theme-btn {
+    padding: 8px 15px;
+    border: 1px solid #ddd;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-right: 10px;
+}
+
+.theme-btn.active {
+    background-color: #4CAF50;
+    color: white;
+    border-color: #4CAF50;
+}
+
+.settings-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 30px;
+}
+
+.save-btn, .logout-btn {
+    padding: 12px 25px;
+    border-radius: 10px;
+    font-weight: bold;
+    cursor: pointer;
+    border: none;
+}
+
+::-webkit-scrollbar{
+    width: 25px;
+    height: 40px;
+    padding-right: 20px;
+}
+
+::-webkit-scrollbar-track{
+    background-color: white;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb{
+    background-color: #DB3A78;
+    border-radius: 12px;
+    border: 5px solid white;
+}
+
+.save-btn {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.logout-btn {
+    background-color: #f44336;
+    color: white;
+}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            
+            <div class="flag">
+                <img src="/img/KR.png">
+            </div>
+            <div class="fire">
+                <span>
+                    <img src="/img/Fire.png"></span>
+            </div>
+            <div class="level" id="profile-level">13</div>
+            <div class="name">MINJI</div>
+            <div class="profile-containeer">
+                <button class="profile-button" id="profileButton">
+                    <span><a href="profile.html" class="profileButton"><img src="/img/profile.png"></span> 
+                </button>
+            </a>
+            </div>
+                <div class="menu-container">
+                    <button class="menu-button" id="menuButton">
+                        <span><img src="/img/more-square.png"></span> 
+                    </button>
+                    <div class="dropdown-menu" id="dropdownMenu">
+                        <ul>
+                            <li><a href="index.html" class="menu-item"><img src="/img/home-2.png"></a></li>
+                            <li><a href="book.html" class="menu-item"><img src="/img/book.png"></a></li>
+                            <li><a href="message.html"><img src="/img/message.png"></a></li>
+                            
+                            <li><a href="setting.html"><img src="/img/setting.png"></a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="settings-container">
+            <h1 class="settings-title">설정 (Настройки)</h1>
+            
+            <div class="settings-section">
+                <h2><img src="/img/user.png" class="section-icon"> Аккаунт</h2>
+                <div class="setting-item">
+                    <span>Имя пользователя</span>
+                    <div class="setting-value">MINJI <button class="edit-btn">변경</button></div>
+                </div>
+                <div class="setting-item">
+                    <span>Аватар</span>
+                    <div class="setting-value">
+                        <img src="/img/profile.png" class="avatar-preview">
+                        <button class="edit-btn">변경</button>
+                    </div>
+                </div>
+                <div class="setting-item">
+                    <span>Email</span>
+                    <div class="setting-value">user@example.com <button class="edit-btn">변경</button></div>
+                </div>
+                <div class="setting-item">
+                    <span>Пароль</span>
+                    <div class="setting-value">•••••••• <button class="edit-btn">변경</button></div>
+                </div>
+            </div>
+            
+            
+            
+            <div class="settings-actions">
+                <button class="save-btn">저장 (Сохранить)</button>
+                <button class="logout-btn">로그아웃 (Выйти)</button>
+            </div>
+        </div>
+    </div>
+
+    
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<input type="file" id="avatar-input" style="display: none;" accept="image/*" />
+
+<script>
+let selectedAvatarFile = null;
+
+document.addEventListener("DOMContentLoaded", () => {
+  
+  fetch("/api/user/profile", {
+  credentials: "include"
+})
+.then(res => res.json())
+.then(data => {
+   
+
+document.querySelectorAll(".setting-item").forEach(item => {
+  const label = item.querySelector("span")?.innerText?.toLowerCase();
+  const valueNode = item.querySelector(".setting-value")?.childNodes[0];
+
+  if (!label || !valueNode) return;
+
+  if (label.includes("имя пользователя")) {
+    valueNode.textContent = data.username;
+  }
+
+  if (label.includes("email")) {
+    valueNode.textContent = data.email;
+  }
+
+  if (label.includes("аватар")) {
+    const img = item.querySelector(".avatar-preview");
+    if (img) img.src = data.avatar;
+  }
+});
+
+});
+  });
+
+  
+  document.querySelector('.avatar-preview + button')?.addEventListener("click", () => {
+    document.getElementById("avatar-input").click();
+  });
+
+ 
+  document.getElementById("avatar-input")?.addEventListener("change", (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      selectedAvatarFile = file;
+      const reader = new FileReader();
+      reader.onload = function(evt) {
+        document.querySelector(".avatar-preview").src = evt.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+  });
+
+ 
+  const saveBtn = document.querySelector(".save-btn");
+  saveBtn?.addEventListener("click", async () => {
+    if (!selectedAvatarFile) return;
+
+    const formData = new FormData();
+    formData.append("avatar", selectedAvatarFile);
+
+    const res = await fetch("/api/user/avatar", {
+      method: "POST",
+      body: formData,
+      credentials: "include"
+    });
+
+    const data = await res.json();
+    if (res.ok) {
+      alert("Аватар обновлён!");
+    } else {
+      alert(data.message || "Ошибка загрузки");
+    }
+  });
+
+  
+  const logoutBtn = document.querySelector(".logout-btn");
+  logoutBtn?.addEventListener("click", () => {
+    if (confirm('Выйти из аккаунта?')) {
+      window.location.href = 'login.html';
+    }
+  });
+
+</script>
+<script src="script.js"></script>
+</body>
+
+</html>

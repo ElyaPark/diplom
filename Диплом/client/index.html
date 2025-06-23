@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MINJI</title>
+    <link rel="stylesheet" href="style1.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+</head>
+<body>
+
+    <div class="container">
+        <div class="header">
+            
+            <div class="flag">
+                <img src="/img/KR.png">
+            </div>
+            <div class="fire">
+                <span>
+                    <img src="/img/Fire.png"></span>
+            </div>
+            <div class="level" id="profile-level">13</div>
+            <div class="name">MINJI</div>
+            <div class="profile-containeer">
+                <button class="profile-button" id="profileButton">
+                    <span><a href="profile.html" class="profileButton"><img src="/img/profile.png"></span> 
+                </button>
+            </a>
+            </div>
+                <div class="menu-container">
+                    <button class="menu-button" id="menuButton">
+                        <span><img src="/img/more-square.png"></span> 
+                    </button>
+                    <div class="dropdown-menu" id="dropdownMenu">
+                        <ul>
+                            <li><a href="index.html" class="menu-item"><img src="/img/home-2.png"></a></li>
+                            <li><a href="book.html" class="menu-item"><img src="/img/book.png"></a></li>
+                            <li><a href="message.html"><img src="/img/message.png"></a></li>
+                           
+                            <li><a href="setting.html"><img src="/img/setting.png"></a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+   
+        <div class="progress-container">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+        
+        <div class="lessons-panel" id="initial-panel">
+            <div class="lesson-content animate__animated animate__fadeIn">
+                <h3>Добро пожаловать!</h3>
+                <p>Выберите урок, чтобы начать изучение корейского языка.</p>
+                <div class="motivation-quote">
+                    <p>"Каждый эксперт когда-то был новичком. Начни сейчас!"</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="lessons-panel" id="lesson-panel" style="display: none;">
+            <div class="lesson-content animate__animated animate__fadeIn" id="lesson-content-block">
+                <h3 id="lesson-title"></h3>
+                <p id="lesson-description"></p>
+                <div id="lesson-duration"></div>
+                <div class="lesson-badges" id="lesson-badges"></div>
+            </div>
+        
+            <div class="content" id="start-button-block">
+                <button class="start-btn animate__animated animate__pulse" onclick="startLesson()">Начать</button>
+            </div>
+        
+            <div class="lesson-details" id="lesson-details" style="display: none;">
+                <div class="theory" id="theory-block"></div>
+                <div class="practice" id="practice-block"></div>
+                <div class="interactive-section" id="interactive-block" style="display: none;"></div>
+                <div class="lesson-complete" id="lesson-complete" style="display: none;">
+                    <div class="confetti"></div>
+                    <h3>Урок пройден!</h3>
+                    <p>Ты молодец! Продолжай в том же духе!</p>
+                    <button class="next-lesson-btn" id="nextLessonBtn">Следующий урок</button>
+                    <div class="xp-earned">
+                        <p>+50 XP</p>
+                    </div>
+                </div>
+            </div>
+            
+          
+            <div class="task-navigation" id="taskNavigation" style="display: none;">
+                <button class="next-task-btn" id="nextTaskBtn">Далее →</button>
+            </div>
+        </div>
+        
+        <div class="bottom-navigation" id="lesson-buttons-panel">
+            <ul id="lesson-buttons"></ul>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+
+
+<style>
+  .intro-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.75);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+  }
+
+  .dialog-box {
+    background: white;
+    padding: 25px 30px;
+    max-width: 500px;
+    width: 90%;
+    border-radius: 16px;
+    font-family: sans-serif;
+    box-shadow: 0 0 20px rgba(0,0,0,0.3);
+  }
+
+  .dialog-text {
+    font-size: 18px;
+    margin-bottom: 20px;
+  }
+
+  .dialog-button {
+    background: #e0296f;
+    color: white;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 10px;
+    cursor: pointer;
+    float: right;
+  }
+
+ 
+</style>
+
+
+
+<script>
+  const dialogMessages = [
+    "Привет! Я Минджи — и я помогу тебе выучить корейский язык!",
+    "На этом сайте ты сможешь проходить уроки, учить слова, слушать песни и тренировать аудирование!",
+    "Но если ты не зарегистрируешься, твой прогресс не сохранится 🙁",
+    "Так что советую войти или зарегистрироваться, чтобы ничего не потерять!",
+    "Удачи! 🎉"
+  ];
+
+  const dialogBox = document.getElementById("introDialog");
+  const dialogText = document.getElementById("dialogText");
+  const nextBtn = document.getElementById("nextDialog");
+  let dialogIndex = 0;
+
+  let isLoggedIn = false;
+
+try {
+  const res = await fetch("/api/auth/check", { credentials: "include" });
+  isLoggedIn = res.ok;
+} catch {
+  isLoggedIn = false;
+}
+
+  const hasSeenIntro = localStorage.getItem("minjiIntroShown") === "true";
+
+  
+  if (!isLoggedIn && !hasSeenIntro) {
+    dialogText.textContent = dialogMessages[dialogIndex];
+
+    nextBtn.addEventListener("click", () => {
+      dialogIndex++;
+      if (dialogIndex < dialogMessages.length) {
+        dialogText.textContent = dialogMessages[dialogIndex];
+        if (dialogIndex === dialogMessages.length - 1) {
+          nextBtn.textContent = "Начать";
+        }
+      } else {
+        dialogBox.remove();
+        localStorage.setItem("minjiIntroShown", "true");
+      }
+    });
+  } else {
+    dialogBox.remove(); 
+  }
+</script>
+
+
+
+
+</body>
+
+</html>

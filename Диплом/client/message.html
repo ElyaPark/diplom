@@ -1,0 +1,265 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MINJI - Messages</title>
+    <link rel="stylesheet" href="style1.css">
+</head>
+<body>
+
+<div class="header">
+    <div class="flag">
+        <img src="/img/KR.png">
+    </div>
+    <div class="fire">
+        <span><img src="/img/Fire.png"></span>
+    </div>
+    <div class="level" id="profile-level">13</div>
+    <div class="name" id="profile-name">MINJI</div>
+    <div class="profile-containeer">
+        <button class="profile-button" id="profileButton">
+            <span><a href="profile.html" class="profileButton"><img src="/img/profile.png"></a></span>
+        </button>
+    </div>
+    <div class="menu-container">
+        <button class="menu-button" id="menuButton">
+            <span><img src="/img/more-square.png"></span>
+        </button>
+        <div class="dropdown-menu" id="dropdownMenu">
+            <ul>
+                <li><a href="index.html" class="menu-item"><img src="/img/home-3.png"></a></li>
+                <li><a href="book.html" class="menu-item"><img src="/img/book.png"></a></li>
+                <li><a href="message.html"><img src="/img/message1.png"></a></li>
+               
+                <li><a href="setting.html"><img src="/img/setting.png"></a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div class="messenger-container">
+    <div class="contacts-panel">
+        <div id="contacts-list"></div>
+    </div>
+
+    <div class="chat-panel" id="chat-panel">
+        <div id="chat-header" class="chat-header">
+            <span id="chat-friend-name">Выберите друга для переписки</span>
+        </div>
+        <div id="chat-messages" class="chat-messages">
+           
+        </div>
+        <div class="chat-input-area">
+            <input type="text" id="chat-input" placeholder="Введите сообщение..." disabled>
+            <button id="send-button" onclick="sendMessage()" disabled>Отправить</button>
+        </div>
+    </div>
+</div>
+
+<script src="script.js"></script>
+
+
+
+<script>
+
+let selectedFriend = null;
+
+fetch("/api/auth/check", { credentials: "include" })
+  .then(res => res.json())
+  .then(data => {
+    window._myId = data.id;
+  })
+  .catch(() => {
+    console.warn("Не удалось получить ID пользователя");
+  });
+
+
+async function loadFriendsInMessenger() {
+  try {
+    const res = await fetch("/api/user/friends", { credentials: "include" });
+    const friends = await res.json();
+    const container = document.getElementById("contacts-list");
+    container.innerHTML = ""; 
+
+    if (friends.length === 0) {
+      container.innerHTML = "<p>У вас нет друзей для чата</p>";
+      return;
+    }
+
+    friends.forEach(friend => {
+      const el = document.createElement("div");
+      el.className = "contact";
+      el.innerHTML = `
+        <img class="contact-avatar" src="${friend.avatar || '/img/default-avatar.png'}" />
+        <div class="contact-info">
+          <div class="contact-name">${friend.username}</div>
+        </div>
+      `;
+      el.addEventListener("click", () => {
+        loadChat(friend.id);
+        document.getElementById("chat-friend-name").textContent = friend.username;
+      });
+      container.appendChild(el);
+    });
+  } catch (err) {
+    console.error("Не удалось загрузить друзей в мессенджере", err);
+  }
+}
+
+
+async function loadChat(friendId) {
+  console.log("Загружаем чат с другом с ID:", friendId);
+  selectedFriend = friendId;
+
+ 
+  document.getElementById('chat-input').disabled = false;
+  document.getElementById('send-button').disabled = false;
+
+  const friendNameDisplay = document.getElementById('chat-friend-name');
+  friendNameDisplay.textContent = "Друг " + friendId; 
+
+  const messagesContainer = document.getElementById('chat-messages');
+  messagesContainer.innerHTML = ""; 
+  try {
+    const res = await fetch("/api/messages/" + friendId, { credentials: "include" });
+    const messages = await res.json();
+
+    console.log("Сообщения с другом:", messages);
+
+    messages.forEach(msg => {
+      const msgEl = document.createElement("div");
+      msgEl.className = "message " + (msg.sender_id === window._myId ? "sent" : "received");
+      msgEl.textContent = msg.content;
+      messagesContainer.appendChild(msgEl);
+    });
+
+    
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+  } catch (err) {
+    console.error("Ошибка загрузки чата", err);
+  }
+}
+
+
+async function sendMessage() {
+  const input = document.getElementById('chat-input');
+  const content = input.value.trim();
+
+  if (!content || !selectedFriend) return;
+
+  try {
+    const res = await fetch("/api/messages/send", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify({ receiverId: selectedFriend, content })
+    });
+
+    if (res.ok) {
+      console.log("Сообщение отправлено:", content);
+      input.value = "";  
+      await loadChat(selectedFriend);  
+    } else {
+      console.error("Ошибка отправки сообщения:", await res.text());
+    }
+  } catch (err) {
+    console.error("Ошибка отправки", err);
+  }
+}
+
+
+document.getElementById('send-button').addEventListener('click', sendMessage);
+
+
+window.addEventListener("DOMContentLoaded", async () => {
+
+  document.getElementById('chat-input').disabled = true;
+  document.getElementById('send-button').disabled = true;
+
+  await loadFriendsInMessenger();
+
+  const params = new URLSearchParams(window.location.search);
+  const friendId = params.get("id");
+  if (friendId) {
+    loadChat(friendId);
+  }
+});
+
+</script>
+
+
+<script>
+document.addEventListener("DOMContentLoaded", async () => {
+  const params = new URLSearchParams(window.location.search);
+  const friendId = params.get("id");
+  const chatBox = document.getElementById("chat-box");
+  const messageInput = document.getElementById("message-input");
+  const sendButton = document.getElementById("send-button");
+
+  async function loadMessages() {
+    const res = await fetch(`/api/messages/${friendId}`, { credentials: "include" });
+    const messages = await res.json();
+    chatBox.innerHTML = "";
+    messages.forEach(msg => {
+      const msgDiv = document.createElement("div");
+      msgDiv.className = msg.sender_id === window.currentUserId ? "my-message" : "their-message";
+      msgDiv.textContent = msg.content;
+      chatBox.appendChild(msgDiv);
+    });
+  }
+
+  sendButton.addEventListener("click", async () => {
+    const content = messageInput.value.trim();
+    if (!content) return;
+
+    await fetch("/api/messages/send", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify({ receiverId: friendId, content })
+    });
+
+    messageInput.value = "";
+    await loadMessages();
+  });
+
+  if (friendId) {
+    await loadMessages();
+  }
+});
+
+async function sendMessage() {
+  const input = document.getElementById("chat-input");
+  const text = input.value.trim();
+  if (!text || !selectedFriend) return;
+
+  try {
+    await fetch("/api/messages/send", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify({
+      receiverId: selectedFriend.id,
+      content: text
+      }),
+    });
+
+    
+    const msgContainer = document.getElementById("chat-messages");
+    const msgDiv = document.createElement("div");
+    msgDiv.className = "my-message"; 
+    msgDiv.textContent = text;
+    msgContainer.appendChild(msgDiv);
+    msgContainer.scrollTop = msgContainer.scrollHeight;
+
+    input.value = ""; 
+  } catch (err) {
+    console.error("Ошибка отправки:", err);
+  }
+}
+
+</script>
+</body>
+</html>
